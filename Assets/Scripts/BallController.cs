@@ -39,6 +39,7 @@ public class BallController : MonoBehaviour
             Destroy(other.gameObject);
             _scoreController.PlusScore(10);
             Debug.Log(_scoreController.GetScore());
+            
         }
         
     }

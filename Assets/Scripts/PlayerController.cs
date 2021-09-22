@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,12 +12,15 @@ public class PlayerController : MonoBehaviour
 
     public GameObject rightBall;
     public GameObject leftBall;
-    
+
+    public List<AudioClip> audioClips;
+
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     
     private ScoreController _scoreController;
-    
+
+    private AudioSource _audioSource;
     
     private Animator _animator;
 
@@ -28,7 +32,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _scoreController = FindObjectOfType<ScoreController>();
-        
+        _audioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -57,6 +62,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up*jumpforce,ForceMode2D.Impulse);
                 _animator.SetInteger("Estado",2);
+                _audioSource.PlayOneShot(audioClips[1]);
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
@@ -71,6 +77,7 @@ public class PlayerController : MonoBehaviour
                 var position = new Vector2(transform.position.x,transform.position.y);
                 var rotation = rightBall.transform.rotation;
                 Instantiate(bullet, position, rotation);
+                _audioSource.PlayOneShot(audioClips[0]);
             }
             
         }
@@ -83,6 +90,8 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
             _scoreController.PlusBronce(1);
             Debug.Log(_scoreController.GetBronce());
+            _audioSource.PlayOneShot(audioClips[2]);
+            SceneManager.LoadScene("Scene02");
         }
         
         if (collision.gameObject.CompareTag("MonedaPlata"))
@@ -90,6 +99,7 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
             _scoreController.PlusPlata(1);
             Debug.Log(_scoreController.GetPlata());
+            _audioSource.PlayOneShot(audioClips[2]);
         }
         
         if (collision.gameObject.CompareTag("MonedaOro"))
@@ -97,6 +107,7 @@ public class PlayerController : MonoBehaviour
             Destroy(collision.gameObject);
             _scoreController.PlusOro(1);
             Debug.Log(_scoreController.GetOro());
+            _audioSource.PlayOneShot(audioClips[2]);
         }
     }
 
